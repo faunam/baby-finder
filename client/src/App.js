@@ -3,10 +3,16 @@ import React, {useEffect, useState} from 'react';
 import Button from '@mui/material/Button';
 // import passport from 'passport';
 import PhotoDisplay from './components/PhotoDisplay';
-import {auth} from './auth.js';
+import GoogleAuthButton from './utils/googleAuth';
+import Login from './components/login';
+import Logout from './components/logout';
+
+import * as dotenv from 'dotenv'
 import './App.css';
 
 function App() {
+
+  dotenv.config();
 
   const [data, setData] = useState();
   const [photoData, setPhotoData] = useState({});
@@ -51,11 +57,18 @@ function App() {
     // });
   }
 
+  console.log(process.env);
+
   return (
     <div className="App"
       >
       <div className="main"
       >
+      {/* <Login></Login>
+      <Logout></Logout> */}
+      <div>
+        <GoogleAuthButton></GoogleAuthButton>
+      </div>
         <Button 
           variant="contained"
           onClick={() => {
