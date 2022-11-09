@@ -1,9 +1,9 @@
 import React from 'react';
+import google from 'googleapis';
 
 function GoogleAuthButton() {
 
     const handleToken = (response) => {
-        const responsePayload = decodeJwtResponse(response.credential);
         console.log(response);
         // const responsePayload = decodeJwtResponse(response.credential);
 
@@ -11,29 +11,26 @@ function GoogleAuthButton() {
         // console.log('Full Name: ' + responsePayload.name);
     }
 
+    const handleCredentialResponse = (response) => {
+        console.log("Encoded JWT ID token: " + response.credential);
+    }
+
+
     return (
         <div>
             <script src="https://accounts.google.com/gsi/client" async defer></script>
-            <div id="g_id_onload"
-                data-client_id={process.env.REACT_APP_GOOGLE_CLIENT_ID}
-                data-callback="handleToken"
-                data-auto_prompt="false">
-            </div>
-            <div className="g_id_signin"
-                data-type="standard"
-                data-size="large"
-                data-theme="outline"
-                data-text="sign_in_with"
-                data-shape="rectangular"
-                data-logo_alignment="left">
-            </div>
-            <script>
-                function handleToken(response) {
-                    const responsePayload = decodeJwtResponse(response.credential);
-
-                    console.log(response)
-                }
-            </script>
+            <div id="buttonDiv"></div> 
+            {window.onload = () => {
+                google.accounts.id.initialize({
+                    client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
+                    callback: handleCredentialResponse
+                });
+                google.accounts.id.renderButton(
+                    document.getElementById("buttonDiv"),
+                    { theme: "outline", size: "large" }  // customization attributes
+                );
+                google.accounts.id.prompt(); // also display the One Tap dialog
+            }}
         </div>
     )
 }
