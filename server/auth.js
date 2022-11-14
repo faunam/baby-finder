@@ -22,7 +22,7 @@ export const auth = (passport) => {
       {
         clientID: process.env.REACT_APP_GOOGLE_CLIENT_ID,
         clientSecret: process.env.REACT_APP_GOOGLE_CLIENT_SECRET,
-        callbackURL: 'http://127.0.0.1:8080/auth/google/callback'
+        callbackURL: 'http://localhost:3000/auth/google/callback'
       },
       (token, refreshToken, profile, done) => done(null, {profile, token})));
 };

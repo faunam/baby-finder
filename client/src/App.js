@@ -47,7 +47,6 @@ function App() {
     // maybe look into ajax?
   }
 
-
   console.log(process.env);
 
   return (
@@ -58,13 +57,14 @@ function App() {
       <div>
         {/* <GoogleAuthButton></GoogleAuthButton> */}
       </div>
+      <a href="/auth/google">Login</a>
       <Button 
           variant="contained"
           onClick={() => {
-            // window.location = "/auth/google"; // is this the best way to route?
+            window.location.href = "/auth/google/test"; // is this the best way to route?
           // seems like the above doesnt work; tried navigating window to other endpoints
           // and they didnt actually activate
-            getLogin();
+            // getLogin();
           }}
         >
           Google login
