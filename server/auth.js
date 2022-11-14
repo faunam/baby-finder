@@ -12,17 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {config} from './config.js';
 import {Strategy as GoogleOAuthStrategy} from 'passport-google-oauth20';
 
 export const auth = (passport) => {
+
   passport.serializeUser((user, done) => done(null, user));
   passport.deserializeUser((user, done) => done(null, user));
   passport.use(new GoogleOAuthStrategy(
       {
-        clientID: config.oAuthClientID,
-        clientSecret: config.oAuthclientSecret,
-        callbackURL: config.oAuthCallbackUrl
+        clientID: process.env.REACT_APP_GOOGLE_CLIENT_ID,
+        clientSecret: process.env.REACT_APP_GOOGLE_CLIENT_SECRET,
+        callbackURL: 'http://127.0.0.1:8080/auth/google/callback'
       },
       (token, refreshToken, profile, done) => done(null, {profile, token})));
 };
+
+export const scopes = [
+  'https://www.googleapis.com/auth/photoslibrary.readonly',
+  'profile',
+];

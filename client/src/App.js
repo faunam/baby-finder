@@ -1,9 +1,7 @@
 import logo from './logo.svg';
 import React, {useEffect, useState} from 'react';
 import Button from '@mui/material/Button';
-// import passport from 'passport';
 import PhotoDisplay from './components/PhotoDisplay';
-import GoogleAuthButton from './utils/googleAuth';
 import Login from './components/login';
 import Logout from './components/logout';
 
@@ -17,11 +15,6 @@ function App() {
   const [data, setData] = useState();
   const [photoData, setPhotoData] = useState({});
   const [photos, setPhotos] = useState([]);
-
-  // auth(passport);
-
-  // passport.initialize();
-  // passport.session();
 
   // useEffect(() => {
   //   // doesnt seem like the best way to do this, probably more async savy way.
@@ -48,14 +41,12 @@ function App() {
     });
   }
 
-  const googleLogin = () => {
-    
-    // passport.authenticate('google', {
-    //   scope: config.scopes,
-    //   failureFlash: true,  // Display errors to the user.
-    //   session: true,
-    // });
+  const getLogin = () => {
+    fetch("/auth/google")
+    // TODO update above, doesnt work since its redirecting or sometihng.
+    // maybe look into ajax?
   }
+
 
   console.log(process.env);
 
@@ -64,11 +55,20 @@ function App() {
       >
       <div className="main"
       >
-      {/* <Login></Login>
-      <Logout></Logout> */}
       <div>
-        <GoogleAuthButton></GoogleAuthButton>
+        {/* <GoogleAuthButton></GoogleAuthButton> */}
       </div>
+      <Button 
+          variant="contained"
+          onClick={() => {
+            // window.location = "/auth/google"; // is this the best way to route?
+          // seems like the above doesnt work; tried navigating window to other endpoints
+          // and they didnt actually activate
+            getLogin();
+          }}
+        >
+          Google login
+        </Button>
         <Button 
           variant="contained"
           onClick={() => {
