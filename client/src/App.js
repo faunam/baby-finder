@@ -18,11 +18,6 @@ function App() {
   const [photoData, setPhotoData] = useState({});
   const [photos, setPhotos] = useState([]);
 
-  // auth(passport);
-
-  // passport.initialize();
-  // passport.session();
-
   // useEffect(() => {
   //   // doesnt seem like the best way to do this, probably more async savy way.
   //   fetch("/api")
@@ -47,17 +42,6 @@ function App() {
       setPhotos(JSON.parse(data).photos);
     });
   }
-
-  const googleLogin = () => {
-    
-    // passport.authenticate('google', {
-    //   scope: config.scopes,
-    //   failureFlash: true,  // Display errors to the user.
-    //   session: true,
-    // });
-  }
-
-  console.log(process.env);
 
   return (
     <div className="App"
