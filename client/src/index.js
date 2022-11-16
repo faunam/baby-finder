@@ -3,11 +3,23 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import * as dotenv from 'dotenv'
 
+dotenv.config();
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+      {/* SCRIPTS DEFINED IN THE REACT DOM WILL NOT RUN. need to use a workaround. read more here
+      https://codingshower.com/adding-and-executing-script-tags-in-react-render/ */}
+      
+        {/* <script src="https://accounts.google.com/gsi/client" async defer></script>
+        <script type="text/javascript">
+          function handleCredentialResponse(response) {
+              console.log("Encoded JWT ID token: " + response.credential);
+          }
+        </script> */}
+
+        <App />
   </React.StrictMode>
 );
 

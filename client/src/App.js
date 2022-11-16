@@ -13,25 +13,9 @@ import './App.css';
 function App() {
 
   dotenv.config();
-
-  const [data, setData] = useState();
+  
   const [photoData, setPhotoData] = useState({});
   const [photos, setPhotos] = useState([]);
-
-  // useEffect(() => {
-  //   // doesnt seem like the best way to do this, probably more async savy way.
-  //   fetch("/api")
-  //     .then((res) => res.json()) // why not do this and following in same step? promise thing?
-  //     .then((data) => setData(data.message));
-  // }, []);
-
-  const getHello = () => {
-    setData('Loading');
-    
-    fetch("/api/calculate")
-    .then((res) => res.json())
-    .then((data) => setData(data.message));
-  }
 
   const getMockPhotos = () => {
     fetch("/api/mock-response")
