@@ -1,5 +1,5 @@
 import React from 'react';
-import useScript from 'hooks/useScript';
+import useScript from '../hooks/useScript'
 
 function GoogleAuthButton() {
     useScript('https://accounts.google.com/gsi/client');
