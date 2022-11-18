@@ -27,15 +27,12 @@ function App() {
   //   });
   // }
 
-  const getPhotos = () => {
-    const data = getPhotosFromApi(token.access_token)
-      console.log(data);
-      // setPhotoData(JSON.parse(data));
-      // setPhotos(JSON.parse(data).photos);
-  }
 
-  console.log(photoData);
-  
+  const getPhotos = async () => {
+    const data = await getPhotosFromApi(token.access_token);
+    setPhotoData(data);
+    setPhotos(data.mediaItems);
+  };
   
   return (
     <div className="App"
