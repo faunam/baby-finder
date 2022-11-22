@@ -1,13 +1,21 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# for some reason this isn't getting the pycache files in subfolders
+__pycache__/ 
+
 # dependencies
 client/node_modules
 server/node_modules
 /.pnp
 .pnp.js
-
+ 
 # testing
 /coverage
+
+# model conversion
+_model_prep/images
+_model_prep/models
+# _model_prep/__pycache__/
 
 # production
 /build
