@@ -1,0 +1,51 @@
+
+# creaetd using template from this article https://towardsdatascience.com/serverless-deployment-of-machine-learning-models-on-aws-lambda-5bd1ca9b5c42
+# need to address!!
+# Note: This current template does not include resources that performs server side authentication of API requests. 
+# Therefore, deployment of our lambda function at its current state will allow anyone with the URL to make a request to your function.
+# PLEASE ADDRESS
+
+# template here from AWS official docs https://serverlessland.com/patterns/apigw-iam
+
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Serverless patterns - Amazon API Gateway REST API with IAM authorizer
+Globals:
+  Function:
+    Timeout: 50
+    MemorySize: 5000
+Parameters:
+  Stage:
+    Type: String
+    Default: dev
+Resources:
+  # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+  LambdaAPI:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: !Ref Stage
+  # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  ClassifyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image # as in Docker image. looks in metadata to find docker specs
+      Architectures:
+        - x86_64
+        # ??^
+      Events:
+        Classify:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LambdaAPI
+            Path: /classify
+            Method: POST
+      Policies:
+        - AmazonS3FullAccess
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./
+      DockerTag: python3.9-v1
+Outputs:
+  LambdaApi:
+    Description: "API Gateway endpoint URL for Dev stage for Predict Lambda function"
+    Value: !Sub "https://${LambdaAPI}.execute-api.${AWS::Region}.amazonaws.com/${Stage}/predict"

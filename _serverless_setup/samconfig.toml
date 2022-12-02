@@ -1,0 +1,11 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "baby-test"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-za3yfx5src21"
+s3_prefix = "baby-test"
+region = "us-west-1"
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "Stage=\"dev\""
+image_repositories = ["ClassifyFunction=726134666701.dkr.ecr.us-west-1.amazonaws.com/babytestde72ec06/classifyfunction1a6215b8repo"]

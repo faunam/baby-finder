@@ -17,6 +17,9 @@ _model_prep/images
 _model_prep/models
 # _model_prep/__pycache__/
 
+_serverless_setup/.aws-sam
+_serverless_setup/app/babymodel.pkl
+
 # production
 /build
 
