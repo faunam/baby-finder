@@ -5,8 +5,6 @@ import ImageListItem from '@mui/material/ImageListItem';
 
 function PhotoDisplay({photos}) {
 
-    console.log(photos)
-
 return (
     <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
     {photos.map((item) => (
