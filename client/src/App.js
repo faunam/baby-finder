@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 // import passport from 'passport';
 import PhotoDisplay from './components/PhotoDisplay';
 import GoogleAuthButton from './utils/googleAuth';
-import { getPhotosFromApi } from './api.js';
+import { getPhotosFromApi, modelTest, helloWorld} from './api.js';
 
 import * as dotenv from 'dotenv'
 import './App.css';
@@ -16,6 +16,7 @@ function App() {
   const [token, setToken] = useState([]);
   const [photoData, setPhotoData] = useState({});
   const [photos, setPhotos] = useState([]);
+  const [classified, setClassified] = useState([]);
 
   // const getMockPhotos = () => {
   //   fetch("/api/mock-response")
@@ -27,37 +28,52 @@ function App() {
   //   });
   // }
 
+  // const modelTest = async () => {
+  //   const mock_urls = [
+  //     'https://raisingchildren.net.au/__data/assets/image/0024/47742/baby-behaviour-and-awareness.jpg',
+  //     'https://www.healthychildren.org/SiteCollectionImagesArticleImages/young-girl-in-a-hospital-bed-with-her-teddy-bear.jpg',
+  //   ]
+  //   console.log('modelTest start');
+  //   const data = await modelTest(mock_urls)
+  //   setClassified(data);
+  // };
+
+  const mock_urls = [
+    'https://raisingchildren.net.au/__data/assets/image/0024/47742/baby-behaviour-and-awareness.jpg',
+    'https://www.healthychildren.org/SiteCollectionImagesArticleImages/young-girl-in-a-hospital-bed-with-her-teddy-bear.jpg',
+  ]
+
+  const getHello = async () => {
+    const message = await helloWorld();
+    console.log(message);
+  }
 
   const getPhotos = async () => {
     const data = await getPhotosFromApi(token.access_token);
     setPhotoData(data);
     setPhotos(data.mediaItems);
   };
-  
+
   return (
     <div className="App"
       >
       <div className="main"
       >
-      {/* <Login></Login>
-      <Logout></Logout> */}
-      <div>
         {GoogleAuthButton(setToken)}
-      </div>
         <Button 
             variant="contained"
-            onClick={() => {
-              // getMockPhotos();
-              getPhotos();
-            }}
+            onClick={getPhotos}
+            sx={{margin: "10px"}}
           >
             Get Photos
           </Button>
-        <p>
-          {photos ? "Data Loaded" : "No Data" }
-        </p>
+        <Button 
+            variant="contained"
+            onClick={() => modelTest(mock_urls).then(data => { console.log(data)})}
+          >
+            Classify Mocks
+          </Button>
         <PhotoDisplay photos={photos}></PhotoDisplay>
-        {/* {photos ? PhotoDisplay({photos}) : null} */}
       </div>
 
     </div>

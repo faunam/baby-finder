@@ -11,6 +11,12 @@ const token_header_config = (token) => {
     )
   }
   
+const default_header_config = {
+    headers: {
+      "Content-type": "application/json",
+    }
+};
+  
   
 export const getPhotosFromApi = async (token, pageToken = undefined) => {
     const config = {
@@ -23,3 +29,17 @@ export const getPhotosFromApi = async (token, pageToken = undefined) => {
     const res = await axios.get("https://photoslibrary.googleapis.com/v1/mediaItems", config)
     return res.data;
 };
+
+export const modelTest = async (urls) => {
+  const body = {
+    'urls': urls
+  }
+  const res = await axios.post("http://127.0.0.1:5000/model", body)
+  console.log(res)
+  return res.data;
+};
+
+export const helloWorld = async () => {
+  console.log(default_header_config);
+  return await axios.get("http://127.0.0.1:5000/hello", default_header_config);
+}
