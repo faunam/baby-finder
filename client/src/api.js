@@ -30,6 +30,13 @@ export const getPhotosFromApi = async (token, pageToken = undefined) => {
     return res.data;
 };
 
+export const sendSampleData = async (data) => {
+  const res = await axios.post("http://127.0.0.1:5000/sample", data);
+
+  console.log(res);
+  return res.data;
+}
+
 export const modelTest = async (urls) => {
   const body = {
     'urls': urls

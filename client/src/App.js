@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 // import passport from 'passport';
 import PhotoDisplay from './components/PhotoDisplay';
 import GoogleAuthButton from './utils/googleAuth';
-import { getPhotosFromApi, modelTest, helloWorld} from './api.js';
+import { getPhotosFromApi, modelTest, sendSampleData} from './api.js';
 
 import * as dotenv from 'dotenv'
 import './App.css';
@@ -43,16 +43,13 @@ function App() {
     'https://www.healthychildren.org/SiteCollectionImagesArticleImages/young-girl-in-a-hospital-bed-with-her-teddy-bear.jpg',
   ]
 
-  const getHello = async () => {
-    const message = await helloWorld();
-    console.log(message);
-  }
-
   const getPhotos = async () => {
     const data = await getPhotosFromApi(token.access_token);
     setPhotoData(data);
     setPhotos(data.mediaItems);
   };
+
+  console.log(photoData);
 
   return (
     <div className="App"
@@ -72,6 +69,12 @@ function App() {
             onClick={() => modelTest(mock_urls).then(data => { console.log(data)})}
           >
             Classify Mocks
+          </Button>
+          <Button 
+            variant="contained"
+            onClick={() => {console.log(photoData); return sendSampleData(photoData)}}
+          >
+            Send 100 (example)
           </Button>
         <PhotoDisplay photos={photos}></PhotoDisplay>
       </div>
