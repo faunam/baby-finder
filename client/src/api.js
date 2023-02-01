@@ -11,14 +11,8 @@ const token_header_config = (token) => {
     )
   }
   
-const default_header_config = {
-    headers: {
-      "Content-type": "application/json",
-    }
-};
   
-  
-export const getPhotosFromApi = async (token, pageToken = undefined) => {
+export const getPhotosFromApi = async (token, pageToken = false) => {
     const config = {
         ...token_header_config(token), 
         params: {
@@ -30,23 +24,8 @@ export const getPhotosFromApi = async (token, pageToken = undefined) => {
     return res.data;
 };
 
-export const sendSampleData = async (data) => {
-  const res = await axios.post("http://127.0.0.1:5000/sample", data);
-
+export const classify = async (photoData) => {
+  const res = await axios.post("http://127.0.0.1:5000/model", photoData)
   console.log(res);
   return res.data;
-}
-
-export const modelTest = async (urls) => {
-  const body = {
-    'urls': urls
-  }
-  const res = await axios.post("http://127.0.0.1:5000/model", body)
-  console.log(res)
-  return res.data;
 };
-
-export const helloWorld = async () => {
-  console.log(default_header_config);
-  return await axios.get("http://127.0.0.1:5000/hello", default_header_config);
-}

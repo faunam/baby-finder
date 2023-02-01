@@ -1,3 +1,4 @@
+from curses import KEY_BREAK
 from re import X
 from fastai.vision.all import *
 from urllib.request import urlretrieve
@@ -21,14 +22,7 @@ def download_image_from_url(url, destination):
     urlretrieve(url, destination)
     return destination
 
-def filter_photos(photos_data):
-    # receive photos object
-    # create dictionary - id to metadata
-    # 3 queues - download, process, delete
-    # add all ids to download, pop and add to process, 
-    # pop from process, classify,  add classification to dictionary
-    # add to delete
-    # pop from delete and delete.
+def label_photos(photos_data):
     # any advantage to batching w/in these 3 steps
     # or does that only matter once we start multithreading
         # { media: [
@@ -53,6 +47,8 @@ def filter_photos(photos_data):
     # key = id, value = baseUrl
     urls = {}
     # key = id, value = filename
+    filenames = {}
+    # key = id, value = path + filename
     paths = {}
     # key = id, value = (classification, score)
     labels = {}
@@ -65,18 +61,14 @@ def filter_photos(photos_data):
     for item in photos_data:
         urls[item["id"]] = item["baseUrl"]
         paths[item["id"]] = "imgs/" + item["filename"]
+        filenames[item["id"]] = item["filename"]
         download.append(item["id"])
 
-    # for now this while loop / queuing seems kinda silly
-    # but if i want to multithread its a good thing to set up i think.
-    # i guess it wuold be better to implement it a simpler way if 
-    # im not actually multithreading yet and then add in the 
-    # queueing architecture, but whatver..
     while len(download) > 0:
         #download
         photo_id = download.pop(0)
-        while paths[photo_id][-3:] == 'mp4':
-            photo_id = download.pop(0)
+        if paths[photo_id][-3:] == 'mp4':
+            continue
         print("download", photo_id, time.time())
         filename = paths[photo_id]
         download_image_from_url(urls[photo_id], filename)
@@ -95,7 +87,17 @@ def filter_photos(photos_data):
         print("delete", photo_id, time.time())
         os.remove(paths[photo_id]) 
     
-    return labels
+    # TODO actually create types please...
+    res = [
+        {
+            "id": key, 
+            "label": labels[key], 
+            "baseUrl": urls[key], 
+             "filename": filenames[key]
+        }
+        for key in labels.keys()]
+    
+    return res
 
 ex = [
         {
@@ -132,7 +134,7 @@ def test100():
     print('load json', end - start)
 
     start = time.time()
-    res =filter_photos(ex100)
+    res = label_photos(ex100)
     end = time.time()
     print(res)
     print('process 100', end - start)

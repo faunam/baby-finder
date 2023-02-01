@@ -1,10 +1,10 @@
-import logo from './logo.svg';
 import React, {useEffect, useState} from 'react';
 import Button from '@mui/material/Button';
 // import passport from 'passport';
 import PhotoDisplay from './components/PhotoDisplay';
 import GoogleAuthButton from './utils/googleAuth';
-import { getPhotosFromApi, modelTest, sendSampleData} from './api.js';
+import { getPhotosFromApi, classify } from './api.js';
+import { CHILD_THRESHOLD } from './constants/model';
 
 import * as dotenv from 'dotenv'
 import './App.css';
@@ -16,40 +16,38 @@ function App() {
   const [token, setToken] = useState([]);
   const [photoData, setPhotoData] = useState({});
   const [photos, setPhotos] = useState([]);
-  const [classified, setClassified] = useState([]);
+  const [labels, setLabels] = useState([]);
+  const [children, setChildren] = useState([]);
+  const [nextPageToken, setNextPageToken] = useState("");
 
-  // const getMockPhotos = () => {
-  //   fetch("/api/mock-response")
-  //   .then((res) => res.json())
-  //   // .then((res) => {console.log(res); return res.json()})
-  //   .then((data) => {
-  //     setPhotoData(JSON.parse(data));
-  //     setPhotos(JSON.parse(data).photos);
-  //   });
-  // }
-
-  // const modelTest = async () => {
-  //   const mock_urls = [
-  //     'https://raisingchildren.net.au/__data/assets/image/0024/47742/baby-behaviour-and-awareness.jpg',
-  //     'https://www.healthychildren.org/SiteCollectionImagesArticleImages/young-girl-in-a-hospital-bed-with-her-teddy-bear.jpg',
-  //   ]
-  //   console.log('modelTest start');
-  //   const data = await modelTest(mock_urls)
-  //   setClassified(data);
-  // };
-
-  const mock_urls = [
-    'https://raisingchildren.net.au/__data/assets/image/0024/47742/baby-behaviour-and-awareness.jpg',
-    'https://www.healthychildren.org/SiteCollectionImagesArticleImages/young-girl-in-a-hospital-bed-with-her-teddy-bear.jpg',
-  ]
+  useEffect(() => {
+    const filtered = labels.filter(item => {
+      const [label, percent] = item.label;
+      console.log(percent);
+      return label === "child" && percent > CHILD_THRESHOLD
+    });
+    setChildren(children.concat(filtered));
+  }, [labels]);
 
   const getPhotos = async () => {
-    const data = await getPhotosFromApi(token.access_token);
+    const data = await getPhotosFromApi(token.access_token, nextPageToken);
     setPhotoData(data);
     setPhotos(data.mediaItems);
+    setNextPageToken(data.nextPageToken);
+  };
+
+  const classifyPhotos = async () => {
+    const data = await classify(photoData);
+    setLabels(data);
+    // const filtered = data.filter(item =>
+    //   item["label"] === "child" && item["percent"] > 0.85
+    // );
+    // setChildren(filtered);
   };
 
   console.log(photoData);
+  console.log('labels', labels);
+  console.log('children', children);
 
   return (
     <div className="App"
@@ -66,17 +64,12 @@ function App() {
           </Button>
         <Button 
             variant="contained"
-            onClick={() => modelTest(mock_urls).then(data => { console.log(data)})}
+            onClick={classifyPhotos}
           >
-            Classify Mocks
-          </Button>
-          <Button 
-            variant="contained"
-            onClick={() => {console.log(photoData); return sendSampleData(photoData)}}
-          >
-            Send 100 (example)
+            Classify
           </Button>
         <PhotoDisplay photos={photos}></PhotoDisplay>
+        <PhotoDisplay photos={children}></PhotoDisplay>
       </div>
 
     </div>
