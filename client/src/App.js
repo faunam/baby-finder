@@ -20,29 +20,34 @@ function App() {
   const [children, setChildren] = useState([]);
   const [nextPageToken, setNextPageToken] = useState("");
 
-  useEffect(() => {
-    const filtered = labels.filter(item => {
-      const [label, percent] = item.label;
-      console.log(percent);
-      return label === "child" && percent > CHILD_THRESHOLD
-    });
-    setChildren(children.concat(filtered));
-  }, [labels]);
+  // useEffect(() => {
+  //   const filtered = labels.filter(item => {
+  //     const [label, percent] = item.label;
+  //     console.log(percent);
+  //     return label === "child" && percent > CHILD_THRESHOLD
+  //   });
+  //   setChildren(children.concat(filtered));
+  // }, [labels]);
 
   const getPhotos = async () => {
     const data = await getPhotosFromApi(token.access_token, nextPageToken);
     setPhotoData(data);
     setPhotos(data.mediaItems);
     setNextPageToken(data.nextPageToken);
+
+    classifyPhotos(data);
   };
 
-  const classifyPhotos = async () => {
-    const data = await classify(photoData);
+  const classifyPhotos = async (photos) => {
+    const data = await classify(photos);
     setLabels(data);
-    // const filtered = data.filter(item =>
-    //   item["label"] === "child" && item["percent"] > 0.85
-    // );
-    // setChildren(filtered);
+
+    const filtered = data.filter(item => {
+      const [label, percent] = item.label;
+      console.log(percent);
+      return label === "child" && percent > CHILD_THRESHOLD
+    });
+    setChildren(children.concat(filtered));
   };
 
   console.log(photoData);
@@ -61,12 +66,6 @@ function App() {
             sx={{margin: "10px"}}
           >
             Get Photos
-          </Button>
-        <Button 
-            variant="contained"
-            onClick={classifyPhotos}
-          >
-            Classify
           </Button>
         <PhotoDisplay photos={photos}></PhotoDisplay>
         <PhotoDisplay photos={children}></PhotoDisplay>
